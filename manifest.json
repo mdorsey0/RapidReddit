@@ -24,6 +24,7 @@
         ]
     },
 
+    "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
     "homepage_url": "https://github.com/mdorsey0/RapidReddit",
     "options_page": "options.html",
 
