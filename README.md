@@ -10,4 +10,4 @@ It plays nicely with <a href="https://chrome.google.com/webstore/detail/algjnflp
 
 Displayed posts can be limited to a specific subreddit and the time range is also configurable.
 
-[Chrome Webstore](https://chrome.google.com/webstore/detail/lkjafldkjfasdf) | [GitHub](https://github.com/mdorsey0/RapidReddit)
+[Chrome Webstore](https://chrome.google.com/webstore/detail/rapidreddit/gkankeeflokehbfdkoooobelngkplpod) | [GitHub](https://github.com/mdorsey0/RapidReddit)
