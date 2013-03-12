@@ -1,0 +1,111 @@
+body {
+    font: normal x-small verdana,arial,helvetica,sans-serif;
+    margin: 0;
+}
+
+.top-link {
+    float: right;
+    margin-right: 10px;
+}
+
+.post-list {
+    position: absolute;
+    top: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#unclicked-posts {
+    left: 0px;
+    width: 100%;
+}
+
+.show-clicked #unclicked-posts {
+    width: 50%;
+}
+
+.getting-posts #unclicked-posts {
+    background-image: url(indicator.gif);
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    padding-bottom: 20px;
+}
+
+#clicked-posts {
+    display: none;
+    left: 50%;
+    width: 50%;
+}
+
+.show-clicked #clicked-posts {
+    display: block;
+}
+
+.post {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.votes {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    color: #c6c6c6;
+    text-align: center;
+}
+
+.score {
+    font-weight: bold;
+    font-size: small;
+}
+
+.ups {
+    font-size: 8px;
+    color: #FF8B60;
+}
+
+.downs {
+    font-size: 8px;
+    color: #9494FF;
+}
+
+.details {
+    position: relative;
+    margin-left: 55px;
+}
+
+.has-thumbnail {
+    padding-left: 80px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.title {
+    margin: 0;
+    font-size: medium;
+    font-weight: normal;
+}
+
+.tagline {
+    margin: 0;
+    margin-top: 3px;
+}
+
+.domain, .tagline {
+    font-size: x-small;
+    color: #888;
+}
+
+.domain a, .tagline a {
+    font-size: x-small;
+    color: #888;
+}
+
+.nsfw {
+    color: #ac3939;
+    text-decoration: none;
+    padding: 0 2px;
+    border: 1px solid #d27979;
+    border-radius: 3px;
+}
