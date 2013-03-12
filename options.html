@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>RapidReddit Options</title>
+        <link rel="stylesheet" type="text/css" href="chrome-bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="options.css" />
+        <script src="jquery.min.js"></script>
+        <script src="options.js"></script>
+    </head>
+    <body class="frame">
+        <div class="navigation">
+            <h1><a href="#">RapidReddit</a></h1>
+            <ul class="menu">
+                <li>
+                    <a id="settings-nav" href="#settings">Settings</a>
+                </li>
+            </ul>
+            <ul class="menu">
+                <li>
+                    <a href="#help">Help</a>
+                </li>
+            </ul>
+        </div>
+        <div class="mainview view">
+            <div id="settings">
+                <header>
+                    <h1>Settings</h1>
+                </header>
+                <div class="content">
+                    <section>
+                        <h3>Time Range</h3>
+                        <label for="timeRange">Show posts from: </label>
+                        <select id="timeRange">
+                            <option value="hour">this hour</option>
+                            <option value="day">today</option>
+                            <option value="week">this week</option>
+                            <option value="month">this month</option>
+                            <option value="year">this year</option>
+                            <option value="all">all time</option>
+                        </select>
+                    </section>
+                    <section>
+                        <h3>Subreddit</h3>
+                        <label for="subreddit">Filter to: &nbsp; &nbsp; /r/</label>
+                        <input id="subreddit" type="text" />
+                    </section>
+                    <section>
+                        <h3>Post Count</h3>
+                        <p>
+                            Show at least:
+                            <input id="postCount" type="text" />
+                            posts
+                        </p>
+                    </section>
+                    <div id="status"></div>
+                    <button id="save">Save</button>
+                </div>
+            </div>
+            <div id="help">
+                <header>
+                    <h1>About</h1>
+                </header>
+                <div class="content">
+                    <section>
+                        <p>RapidReddit is a Google Chrome extension that...</p>
+                        <a href="https://chrome.google.com/webstore/detail/obciceimmggglbmelaidpjlmodcebijb">View in Chrome Webstore</a>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

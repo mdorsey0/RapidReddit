@@ -1,12 +1,7 @@
-/**
- * TODO:  make time-links work
- */
-
-var SUBREDDIT = 'all';
-
-var TIME_FRAME = 'week';
-
-var POST_LIMIT = 25;
+// Reload this page if our options change
+chrome.storage.onChanged.addListener(function() {
+    window.location.reload(true);
+});
 
 function getPosts(after, isChained) {
 
@@ -16,7 +11,7 @@ function getPosts(after, isChained) {
     }
 
     // Stop here if we already have enough posts
-    if ($('#unclicked-posts .post').length >= POST_LIMIT) {
+    if ($('#unclicked-posts .post').length >= options.postCount) {
         $('body').removeClass('getting-posts');
         return;
     }
@@ -25,13 +20,13 @@ function getPosts(after, isChained) {
     $('body').addClass('getting-posts');
 
     // Request posts from reddit
-    $.ajax('http://www.reddit.com/r/' + SUBREDDIT + '/top.json', {
+    $.ajax('http://www.reddit.com/r/' + options.subreddit + '/top.json', {
         cache: false,
         data: {
             sort: 'top',
-            t: TIME_FRAME,
+            t: options.timeRange,
             limit: 100,
-            after: after || '' // TODO:  Can't we just let this be null?
+            after: after
         },
         error: function(jqXHR, status, error) {
 
@@ -213,6 +208,7 @@ function getPostHtml(post) {
     ].join('');
 }
 
+var options;
 $(document).ready(function() {
 
     // Add recent toggle functionality
@@ -220,6 +216,11 @@ $(document).ready(function() {
         $('body').toggleClass('show-clicked');
     });
 
-    // Get our first set of posts now
-    getPosts();
+    // Load options from storage
+    chrome.storage.sync.get(null, function(o) {
+        options = o;
+
+        // Get our first set of posts now
+        getPosts();
+    });
 });

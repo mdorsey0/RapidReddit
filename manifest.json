@@ -26,12 +26,13 @@
 
     //"content_scripts": [...],
     //"content_security_policy": "policyString",
-    //"homepage_url": "http://path/to/homepage",
-    //"options_page": "aFile.html",
+    "homepage_url": "https://github.com/mdorsey0/RapidReddit",
+    "options_page": "options.html",
 
     "permissions": [
         "http://*.reddit.com/",
-        "history"
+        "history",
+        "storage"
     ]
     //"update_url": "http://path/to/updateInfo.xml"
 }
