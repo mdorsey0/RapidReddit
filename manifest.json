@@ -24,8 +24,6 @@
         ]
     },
 
-    //"content_scripts": [...],
-    //"content_security_policy": "policyString",
     "homepage_url": "https://github.com/mdorsey0/RapidReddit",
     "options_page": "options.html",
 
@@ -34,5 +32,4 @@
         "history",
         "storage"
     ]
-    //"update_url": "http://path/to/updateInfo.xml"
 }
