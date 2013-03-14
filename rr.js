@@ -12,15 +12,21 @@ function getPosts(after, isChained) {
 
     // Stop here if we already have enough posts
     if ($('#unclicked-posts .post').length >= options.postCount) {
-        $('body').removeClass('getting-posts');
-        return;
+        return $('body').removeClass('getting-posts');
     }
 
     // A request is now in progress
     $('body').addClass('getting-posts');
 
+    // Build URL with optional subreddit filter
+    var url = [
+        'http://www.reddit.com',
+        options.show === 'front' ? '' : '/r/' + options.subreddit,
+        '/top.json'
+    ].join('');
+
     // Request posts from reddit
-    $.ajax('http://www.reddit.com/r/' + options.subreddit + '/top.json', {
+    $.ajax(url, {
         cache: false,
         data: {
             sort: 'top',
@@ -172,7 +178,7 @@ function getPostHtml(post) {
                 post.downs,
             '</div>',
         '</div>',
-        '<div class="details' + (post.thumbnail.indexOf('http') == 0 ? ' has-thumbnail" style="background-image: url(' + post.thumbnail + ')"' : '"') + '>',
+        '<div class="details' + (post.thumbnail.indexOf('http') === 0 ? ' has-thumbnail" style="background-image: url(' + post.thumbnail + ')"' : '"') + '>',
             '<p class="title">',
                 '<a class="link" href="' + post.url + '" target="_blank">',
                     post.title,

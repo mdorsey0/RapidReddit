@@ -20,18 +20,40 @@ function navigate(ev) {
     }, 200);
 }
 
+function load(options) {
+
+    // Set each form field's value
+    for (var key in options) {
+        if (key === 'show') {
+            $('input:radio[name=' + key + '][value=' + options[key] + ']').trigger('click');
+        } else {
+            $('#' + key).val(options[key]);
+        }
+    }
+
+    // Trigger a click on the first navigation element
+    $('#settings-nav').trigger('click');
+
+    // Focus the first form element
+    $('#timeRange').focus();
+}
+
 function save() {
 
     // Save options to storage
-    chrome.storage.sync.get(null, function(o) {
+    chrome.storage.sync.get(null, function(options) {
 
         // Set each form field value in object
-        for (var i in o) {
-            o[i] = $('#' + i).val();
+        for (var key in options) {
+            if (key === 'show') {
+                options[key] = $('input[name=show]:checked').val();
+            } else {
+                options[key] = $('#' + key).val();
+            }
         }
 
         // Save object to storage
-        chrome.storage.sync.set(o, function() {
+        chrome.storage.sync.set(options, function() {
 
             // Close this options tab
             chrome.tabs.getCurrent(function(tab) {
@@ -67,13 +89,18 @@ $(document).ready(function() {
     // Handle save button click
     $('#save').click(save);
 
-    // Load options from storage into form
-    chrome.storage.sync.get(null, function(o) {
-        for (var i in o) {
-            $('#' + i).val(o[i]);
+    // Handle subreddit filter radio change
+    $('input[name=show]').change(function(e) {
+
+        // Enable/disable subreddit text field
+        if (e.target.value === 'front') {
+            $('#subreddit').attr('disabled', 'disabled');
+        } else {
+            $('#subreddit').removeAttr('disabled').focus();
         }
     });
 
-    // Trigger a click on the first navigation element
-    $('#settings-nav').trigger('click');
+    // Handle options load
+    chrome.storage.sync.get(null, load);
 });
+

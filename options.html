@@ -30,28 +30,33 @@
                 <div class="content">
                     <section>
                         <h3>Time Range</h3>
-                        <label for="timeRange">Show posts from: </label>
-                        <select id="timeRange">
-                            <option value="hour">this hour</option>
-                            <option value="day">today</option>
-                            <option value="week">this week</option>
-                            <option value="month">this month</option>
-                            <option value="year">this year</option>
-                            <option value="all">all time</option>
-                        </select>
+                        <p>
+                            <label for="timeRange">Show posts from</label>
+                            <select id="timeRange">
+                                <option value="hour">this hour</option>
+                                <option value="day">today</option>
+                                <option value="week">this week</option>
+                                <option value="month">this month</option>
+                                <option value="year">this year</option>
+                                <option value="all">all time</option>
+                            </select>
+                        </p>
                     </section>
                     <section>
-                        <h3>Subreddit</h3>
-                        <label for="subreddit">Filter to: &nbsp; &nbsp; /r/</label>
-                        <input id="subreddit" type="text" />
+                        <h3>Subreddit Filter</h3>
+                        <p>
+                            <input id="show-front" type="radio" name="show" value="front" />
+                            <label for="show-front">Show posts from my front page</label>
+                        </p>
+                        <p>
+                            <input id="show-subreddit" type="radio" name="show" value="subreddit" />
+                            <label for="show-subreddit">Show posts from /r/</label>
+                            <input id="subreddit" type="text" />
+                        </p>
                     </section>
                     <section>
                         <h3>Post Count</h3>
-                        <p>
-                            Show at least:
-                            <input id="postCount" type="text" />
-                            posts
-                        </p>
+                        <p>Show at least <input id="postCount" type="text" /> posts</p>
                     </section>
                     <div id="status"></div>
                     <button id="save">Save</button>

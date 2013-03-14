@@ -1,6 +1,7 @@
 // Set default options if necessary
 chrome.storage.sync.get({
-    timeRange: 'week',
+    timeRange: 'day',
+    show: 'front',
     subreddit: 'all',
     postCount: 25
 }, function(o) {
