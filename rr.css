@@ -3,14 +3,31 @@ body {
     margin: 0;
 }
 
+#bars {
+    margin: 0;
+    padding: 0;
+    height: 50px;
+}
+
 .top-link {
-    float: right;
-    margin-right: 10px;
+    position: absolute;
+    top: 0px;
+    right: 10px;
+}
+
+#bars .bar {
+    display: inline-block;
+    vertical-align: bottom;
+    background-color: #FF8B60;
+}
+
+#bars .clicked {
+    background-color: #c6c6c6;
 }
 
 .post-list {
     position: absolute;
-    top: 20px;
+    top: 70px;
     list-style: none;
     margin: 0;
     padding: 0;

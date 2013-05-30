@@ -52,14 +52,15 @@ function save() {
             }
         }
 
-        // Save object to storage
-        chrome.storage.sync.set(options, function() {
+        // Save object to storage, then close
+        chrome.storage.sync.set(options, close);
+    });
+}
 
-            // Close this options tab
-            chrome.tabs.getCurrent(function(tab) {
-                chrome.tabs.remove(tab.id);
-            });
-        });
+// Close this options tab
+function close() {
+    chrome.tabs.getCurrent(function(tab) {
+        chrome.tabs.remove(tab.id);
     });
 }
 
@@ -86,8 +87,9 @@ $(document).ready(function() {
     // Hide any sections that aren't selected
     $('.mainview > *:not(.selected)').css('display', 'none');
 
-    // Handle save button click
+    // Handle save, cancel button clicks
     $('#save').click(save);
+    $('#cancel').click(close);
 
     // Handle subreddit filter radio change
     $('input[name=show]').change(function(e) {

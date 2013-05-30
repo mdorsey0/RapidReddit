@@ -3,6 +3,13 @@ chrome.storage.onChanged.addListener(function() {
     window.location.reload(true);
 });
 
+$('head').append(
+    $('<style/>', {
+        id: 'barStyle',
+        html: '#bars .bar {}'
+    })
+);
+
 function getPosts(after, isChained) {
 
     // Stop here if this isn't a chained call and we're already getting posts
@@ -61,6 +68,18 @@ function processPosts(listing) {
         updatePost(listing.data.children[i].data);
     }
 
+    var bars = $('#bars .bar'), maxScore = 0;
+    bars.each(function(index, el) {
+        maxScore = Math.max(maxScore, $(el).attr('score'));
+    });
+
+    var width = 1 / bars.length * 100 / 2;
+    $('#barStyle').html('#bars .bar {width: ' + width + '%; margin-left: ' + width + '%;}');
+
+    bars.each(function(index, el) {
+        $(el).height($(el).attr('score') / maxScore * 100 + '%');
+    });
+
     // Schedule the next request to get more posts
     setTimeout(getPosts.bind(this, listing.data.after, true), 2000);
 }
@@ -74,34 +93,41 @@ function updatePost(post) {
         $('#' + post.id + ' .downs').text(post.downs);
         $('#' + post.id + ' time').text($.timeago(post.created_utc * 1000));
         $('#' + post.id + ' .comments').text(post.num_comments + ' comments');
+
+        // Update "score" attribute of bar
+        $('#b_' + post.id).attr('score', post.score);
         return;
     }
 
+    drawBar(post.id, post.score);
+
     // Get the list of similar URLs
-    var urls = getSimilarUrls(post.url);
+    getSimilarUrls(post.url, function(urls) {
 
-    // Define a callback for processing visits
-    var processVisits = function(results) {
+        // Define a callback for processing visits
+        var processVisits = function(results) {
 
-        // Stop the recursion here if we've seen this URL
-        if (results.length) {
-            return;
-        }
+            // Stop the recursion here if we've seen this URL
+            if (results.length) {
+                $('#b_' + post.id).addClass('clicked');
+                return;
+            }
 
-        // If we have more to try, do that now...
-        if (urls.length) {
-            return chrome.history.getVisits({url: urls.shift()}, processVisits);
-        }
+            // If we have more to try, do that now...
+            if (urls.length) {
+                return chrome.history.getVisits({url: urls.shift()}, processVisits);
+            }
 
-        // Otherwise, we haven't seen this URL before, so draw the post
-        drawPost(post);
-    };
+            // Otherwise, we haven't seen this URL before, so draw the post
+            drawPost(post);
+        };
 
-    // Query history for visits to the first URL
-    chrome.history.getVisits({url: urls.shift()}, processVisits);
+        // Query history for visits to the first URL
+        chrome.history.getVisits({url: urls.shift()}, processVisits);
+    });
 }
 
-function getSimilarUrls(htmlEncodedUrl) {
+function getSimilarUrls(htmlEncodedUrl, callback) {
 
     // URLs in post structure can have HTML entities in them (e.g. '&amp;' vs. '&')
     var url = $('<div/>').html(htmlEncodedUrl).text();
@@ -113,23 +139,50 @@ function getSimilarUrls(htmlEncodedUrl) {
     // Look at domain to determine similiar URLs
     switch (parser.hostname) {
 
+        // youtube.com -> www.youtube.com
         case 'youtube.com':
-            return [
+            return callback([
                 url,
                 parser.protocol + '//www.' + parser.host + parser.pathname + parser.search + parser.hash
-            ];
+            ]);
 
+        // youtu.be -> www.youtube.com
         case 'youtu.be':
             var id = parser.pathname.split('/'),
                 params = (parser.search || '').length ? ('&' + parser.search.substr(1)) : '';
 
-            return [
+            return callback([
                 url,
                 parser.protocol + '//www.youtube.com/watch?v=' + id[1] + '&feature=youtu.be' + params + parser.hash
-            ];
+            ]);
     }
 
-    return [url];
+    // No similar URLs available
+    callback([url]);
+}
+
+function drawBar(id, score) {
+
+    // Define the markup for a new bar
+    var bar = [
+        '<div id="b_',
+        id,
+        '" class="bar" score="',
+        score,
+        '"></div>'
+    ].join('');
+
+    // Look for a good place to insert the bar
+    $('#bars .bar').each(function(index, el) {
+        if ($(el).attr('score') < score) {
+           return $(el).before(bar) && false;
+        }
+    });
+
+    // Or just append at the end
+    if (!$('#b_' + id).length) {
+        $('#bars').append(bar);
+    }
 }
 
 function drawPost(post) {
@@ -154,6 +207,9 @@ function drawPost(post) {
 
     // Listen for post clicks
     $('#' + el.id + ' .link').click(post.id, function(e) {
+
+        // Update bar class
+        $('#b_' + e.data).addClass('clicked');
 
         // Moved to clicked-posts list
         $('#clicked-posts').prepend($('#' + e.data));
