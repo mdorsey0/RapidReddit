@@ -68,17 +68,22 @@ function processPosts(listing) {
         updatePost(listing.data.children[i].data);
     }
 
+    // Temporarily disable bars
+    if (false) {
+
     var bars = $('#bars .bar'), maxScore = 0;
     bars.each(function(index, el) {
         maxScore = Math.max(maxScore, $(el).attr('score'));
     });
 
-    var width = 1 / bars.length * 100 / 2;
-    $('#barStyle').html('#bars .bar {width: ' + width + '%; margin-left: ' + width + '%;}');
+    var width = 1 / bars.length * 100;// / 2;
+    $('#barStyle').html('#bars .bar {width: ' + width + '%;}');// margin-left: ' + width + '%;}');
 
     bars.each(function(index, el) {
         $(el).height($(el).attr('score') / maxScore * 100 + '%');
     });
+
+    }
 
     // Schedule the next request to get more posts
     setTimeout(getPosts.bind(this, listing.data.after, true), 2000);
@@ -88,18 +93,34 @@ function updatePost(post) {
 
     // If this post already exists, update it
     if (document.getElementById(post.id)) {
+
+        // Update score, date, comments of this post
         $('#' + post.id + ' .ups').text(post.ups);
         $('#' + post.id + ' .score').text(post.score);
         $('#' + post.id + ' .downs').text(post.downs);
         $('#' + post.id + ' time').text($.timeago(post.created_utc * 1000));
         $('#' + post.id + ' .comments').text(post.num_comments + ' comments');
 
+        // Temporarily disable bars
+        return;
+
+        // Get this post's bar from the visualization
+        var bar = $('#b_' + post.id);
+
         // Update "score" attribute of bar
-        $('#b_' + post.id).attr('score', post.score);
+        bar.attr('score', post.score);
+
+        // Update the age CSS class of clicked posts
+        if (!bar.hasClass('new')) {
+            bar.attr('class', 'bar ' + getAgeClass(post.created_utc));
+        }
+
+        // Stop here since we've already drawn this post
         return;
     }
 
-    drawBar(post.id, post.score);
+    // Temporarily disable bars
+    //drawBar(post.id, post.score);
 
     // Get the list of similar URLs
     getSimilarUrls(post.url, function(urls) {
@@ -109,7 +130,8 @@ function updatePost(post) {
 
             // Stop the recursion here if we've seen this URL
             if (results.length) {
-                $('#b_' + post.id).addClass('clicked');
+                // Temporarily disable bars
+                //$('#b_' + post.id).attr('class', 'bar ' + getAgeClass(post.created_utc));
                 return;
             }
 
@@ -119,12 +141,37 @@ function updatePost(post) {
             }
 
             // Otherwise, we haven't seen this URL before, so draw the post
+            $('#b_' + post.id).addClass('new');
             drawPost(post);
         };
 
         // Query history for visits to the first URL
         chrome.history.getVisits({url: urls.shift()}, processVisits);
     });
+}
+
+// Convert to CSS class name
+function getAgeClass(time) {
+    return 'rgb' + (198 + Math.floor(57 * (new Date().getTime() / 1000 - time) / getRange()));
+}
+
+// Convert named time range to seconds
+function getRange() {
+    switch (options.timeRange) {
+        case 'hour':
+            return 60;
+        case 'day':
+            return 86400;
+        case 'week':
+            return 604800;
+        case 'month':
+            return 2.63e+6;
+        case 'year':
+            return 3.156e+7;
+    }
+
+    // 'all' == age of Reddit
+    return new Date().getTime() / 1000 - 1117602000;
 }
 
 function getSimilarUrls(htmlEncodedUrl, callback) {
@@ -154,6 +201,13 @@ function getSimilarUrls(htmlEncodedUrl, callback) {
             return callback([
                 url,
                 parser.protocol + '//www.youtube.com/watch?v=' + id[1] + '&feature=youtu.be' + params + parser.hash
+            ]);
+
+        // m.youtube.com -> www.youtube.com
+        case 'm.youtube.com':
+            return callback([
+                url,
+                parser.protocol + '//www.youtube.com' + parser.pathname + parser.search + '&app=desktop' + parser.hash
             ]);
     }
 
@@ -206,13 +260,14 @@ function drawPost(post) {
     el.innerHTML = getPostHtml(post);
 
     // Listen for post clicks
-    $('#' + el.id + ' .link').click(post.id, function(e) {
+    $('#' + el.id + ' .link').click(post, function(e) {
 
         // Update bar class
-        $('#b_' + e.data).addClass('clicked');
+        // Temporarily disable bars
+        //$('#b_' + e.data.id).attr('class', 'bar ' + getAgeClass(e.data.created_utc));
 
         // Moved to clicked-posts list
-        $('#clicked-posts').prepend($('#' + e.data));
+        $('#clicked-posts').prepend($('#' + e.data.id));
 
         // Get more posts!
         getPosts();
