@@ -42,7 +42,7 @@ body {
 }
 
 .getting-posts #unclicked-posts {
-    background-image: url(indicator.gif);
+    background-image: url(../img/indicator.gif);
     background-repeat: no-repeat;
     background-position: center bottom;
     padding-bottom: 20px;

@@ -10,7 +10,7 @@ chrome.storage.sync.get({
 
 // Listen for browser action click
 chrome.browserAction.onClicked.addListener(function() {
-    chrome.tabs.create({url: 'rr.html'});
+    chrome.tabs.create({url: 'main.html'});
 });
 
 // Google Analytics
